@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import styled from 'styled-components'
 import MusicPlayer from './components/MusicPlayer'
-import PlaylistInput from './components/PlaylistInput'
+import PlaylistInput from './components/PlaylistInput.jsx'
 
 const AppContainer = styled.div`
   min-height: 100vh;
