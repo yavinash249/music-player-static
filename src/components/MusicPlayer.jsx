@@ -13,12 +13,37 @@ import {
 
 const PlayerContainer = styled.div`
   background: linear-gradient(45deg, #1e1e1e, #2d2d2d);
-  padding: 2.5rem;
+  padding: 1.5rem;
   border-radius: 20px;
   width: 100%;
   max-width: 800px;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
   border: 1px solid rgba(255, 255, 255, 0.1);
+  margin: 0 auto;
+
+  @media (max-width: 768px) {
+    padding: 1rem;
+    border-radius: 15px;
+  }
+`
+
+const VideoContainer = styled.div`
+  position: relative;
+  width: 100%;
+  padding-top: 56.25%; /* 16:9 Aspect Ratio */
+  margin-bottom: 1.5rem;
+  border-radius: 12px;
+  overflow: hidden;
+
+  .youtube-iframe {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border: none;
+    border-radius: 12px;
+  }
 `
 
 const Controls = styled.div`
@@ -328,34 +353,39 @@ function MusicPlayer({ playlistUrl }) {
 
   const { videoId, playlistId } = getVideoAndPlaylistId(playlistUrl)
 
-  const opts = {
-    height: '390',
-    width: '640',
-    playerVars: {
-      autoplay: 1,
-      controls: 1,
-      origin: window.location.origin,
-      ...(playlistId && {
-        list: playlistId,
-        listType: 'playlist',
-      })
-    },
-  }
-
   const songs = getCurrentAndUpcomingSongs()
 
   return (
     <PlayerContainer>
-      <YouTube
-        videoId={videoId}
-        opts={opts}
-        onReady={onReady}
-        onStateChange={onStateChange}
-        onError={onError}
-        iframeClassName="youtube-iframe"
-        loading="lazy"
-        title="YouTube music player"
-      />
+      <VideoContainer>
+        <YouTube
+          videoId={videoId}
+          opts={{
+            height: '100%',
+            width: '100%',
+            playerVars: {
+              autoplay: 1,
+              controls: 1,
+              origin: window.location.origin,
+              enablejsapi: 1,
+              modestbranding: 1,
+              rel: 0,
+              showinfo: 0,
+              iv_load_policy: 3,
+              ...(playlistId && {
+                list: playlistId,
+                listType: 'playlist',
+              })
+            },
+          }}
+          onReady={onReady}
+          onStateChange={onStateChange}
+          onError={onError}
+          iframeClassName="youtube-iframe"
+          loading="lazy"
+          title="YouTube music player"
+        />
+      </VideoContainer>
       <Controls>
         <ControlButton 
           onClick={handlePrevious}
@@ -386,7 +416,6 @@ function MusicPlayer({ playlistUrl }) {
         />
       </VolumeControl>
       
-      {/* Current and Upcoming Songs Section */}
       <UpcomingSongs>
         <UpcomingTitle>Now Playing & Up Next</UpcomingTitle>
         <SongList>
